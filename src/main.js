@@ -350,12 +350,22 @@ function nextLane() {
   return (spawnSeed >>> 16) % 12;
 }
 
-function spawnShapeInLane(lane) {
-  shapes.push({ lane, x: layout.spawnX, r: SHAPE_RADIUS, color: LANE_COLORS[lane], alive: true, spin: 0 });
+function spawnShapeInLane(lane, x = layout.spawnX) {
+  shapes.push({ lane, x, r: SHAPE_RADIUS, color: LANE_COLORS[lane], alive: true, spin: 0 });
 }
 
 function spawnShape() {
   spawnShapeInLane(nextLane());
+}
+
+/** Place a song note so it reaches the hit zone at hitMs (handles early chart notes). */
+function spawnSongNote(lane, hitMs) {
+  const travel = layout.spawnX - layout.zoneRight;
+  const leadMs = getSpawnLeadMs();
+  const remaining = Math.max(0, hitMs - songClock);
+  const frac = leadMs > 0 ? Math.min(1, remaining / leadMs) : 0;
+  const x = layout.zoneRight + travel * frac;
+  spawnShapeInLane(lane, x);
 }
 
 function updateSongSpawns() {
@@ -364,7 +374,7 @@ function updateSongSpawns() {
   while (songEventIdx < activeSong.notes.length) {
     const ev = activeSong.notes[songEventIdx];
     if (songClock < ev.t - leadMs) break;
-    spawnShapeInLane(ev.n);
+    spawnSongNote(ev.n, ev.t);
     songEventIdx += 1;
   }
 }
