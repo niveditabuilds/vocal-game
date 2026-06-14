@@ -1,4 +1,4 @@
-# 🎤 Vocal Game
+# 🎤 Pitch Smash
 
 **Your voice is the controller.** Shapes glide in from the right on twelve note-lanes — sing the right note and they shatter. Miss one and it slips past. No keyboard, no mouse, no buttons. Just you and the scale.
 
